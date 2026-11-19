@@ -1,0 +1,184 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Корзина интернет-магазина</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+            padding: 30px;
+        }
+
+        .container {
+            background: white;
+            max-width: 750px;
+            margin: auto;
+            padding: 25px;
+            border-radius: 12px;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        .product {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .quantity {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        button {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+        }
+
+        .change {
+            background: #2878d0;
+        }
+
+        .delete {
+            background: #e53935;
+        }
+
+        .summary {
+            background: #eeeeee;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 8px;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 20px;
+            color: gray;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>Корзина интернет-магазина</h2>
+
+    <div id="cart"></div>
+
+    <div class="summary">
+        <p>Количество товаров: <b id="totalCount">0</b></p>
+        <h3>Итого: <span id="totalPrice">0 ₸</span></h3>
+    </div>
+
+</div>
+
+<script>
+    // Список товаров
+    let products = [
+        { id: 1, name: "Наушники", price: 15000, quantity: 1 },
+        { id: 2, name: "Клавиатура", price: 25000, quantity: 1 },
+        { id: 3, name: "Мышь", price: 10000, quantity: 2 }
+    ];
+
+    const cart = document.getElementById("cart");
+    const totalCount = document.getElementById("totalCount");
+    const totalPrice = document.getElementById("totalPrice");
+
+    // Форматирование цены
+    function formatPrice(price) {
+        return price.toLocaleString("ru-RU") + " ₸";
+    }
+
+    // Отображение корзины
+    function renderCart() {
+        cart.replaceChildren();
+
+        let count = 0;
+        let sum = 0;
+
+        if (products.length === 0) {
+            const message = document.createElement("p");
+            message.textContent = "Корзина пуста";
+            message.classList.add("empty");
+            cart.append(message);
+        }
+
+        products.forEach(product => {
+            count += product.quantity;
+            sum += product.price * product.quantity;
+
+            const row = document.createElement("div");
+            row.classList.add("product");
+
+            const name = document.createElement("span");
+            name.textContent = product.name;
+
+            const price = document.createElement("span");
+            price.textContent = formatPrice(product.price);
+
+            const controls = document.createElement("div");
+            controls.classList.add("quantity");
+
+            const minus = document.createElement("button");
+            minus.textContent = "-";
+            minus.classList.add("change");
+
+            minus.addEventListener("click", () => {
+                if (product.quantity > 1) {
+                    product.quantity--;
+                    renderCart();
+                }
+            });
+
+            const quantity = document.createElement("span");
+            quantity.textContent = product.quantity;
+
+            const plus = document.createElement("button");
+            plus.textContent = "+";
+            plus.classList.add("change");
+
+            plus.addEventListener("click", () => {
+                product.quantity++;
+                renderCart();
+            });
+
+            const deleteBtn = document.createElement("button");
+            deleteBtn.textContent = "Удалить";
+            deleteBtn.classList.add("delete");
+
+            deleteBtn.addEventListener("click", () => {
+                products = products.filter(item => item.id !== product.id);
+                renderCart();
+            });
+
+            controls.append(minus, quantity, plus);
+            row.append(name, price, controls, deleteBtn);
+            cart.append(row);
+        });
+
+        // Пересчёт общей суммы и количества
+        totalCount.textContent = count;
+        totalPrice.textContent = formatPrice(sum);
+    }
+
+    // Первый запуск
+    renderCart();
+
+</script>
+
+</body>
+</html>
