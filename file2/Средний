@@ -1,0 +1,142 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Таблица студентов</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .container {
+            background: white;
+            padding: 25px;
+            max-width: 600px;
+            margin: auto;
+            border-radius: 12px;
+        }
+
+        input {
+            padding: 10px;
+            margin: 5px;
+        }
+
+        button {
+            padding: 10px 15px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background: #2878d0;
+            color: white;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 12px;
+        }
+
+        th {
+            background: #2878d0;
+            color: white;
+        }
+
+        .delete {
+            background: #e53935;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>Таблица студентов</h2>
+
+    <input type="text" id="studentName"
+           placeholder="Имя студента">
+
+    <input type="number" id="studentScore"
+           placeholder="Баллы" min="0" max="100">
+
+    <button id="addBtn">Добавить</button>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Имя</th>
+                <th>Баллы</th>
+                <th>Действие</th>
+            </tr>
+        </thead>
+
+        <tbody id="studentTable">
+        </tbody>
+    </table>
+
+</div>
+
+<script>
+    const nameInput = document.getElementById("studentName");
+    const scoreInput = document.getElementById("studentScore");
+    const addBtn = document.getElementById("addBtn");
+    const table = document.getElementById("studentTable");
+
+    addBtn.addEventListener("click", addStudent);
+
+    function addStudent() {
+        const name = nameInput.value.trim();
+        const score = scoreInput.value;
+
+        if (name === "" || score === "") {
+            alert("Заполните все поля!");
+            return;
+        }
+
+        if (Number(score) < 0 || Number(score) > 100) {
+            alert("Баллы должны быть от 0 до 100!");
+            return;
+        }
+
+        const row = document.createElement("tr");
+
+        const nameCell = document.createElement("td");
+        nameCell.textContent = name;
+
+        const scoreCell = document.createElement("td");
+        scoreCell.textContent = score;
+
+        const actionCell = document.createElement("td");
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "Удалить";
+        deleteBtn.classList.add("delete");
+
+        deleteBtn.addEventListener("click", function() {
+            row.remove();
+        });
+
+        actionCell.append(deleteBtn);
+
+        row.append(nameCell, scoreCell, actionCell);
+
+        table.append(row);
+
+        nameInput.value = "";
+        scoreInput.value = "";
+    }
+</script>
+
+</body>
+</html>
